@@ -1,10 +1,7 @@
 package com.shiftedtech.qa.scripts;
 
 import org.junit.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -30,7 +27,7 @@ public class InputBoxTest {
         //System.setProperty("webdriver.gecko.driver","C:/MyDevelopment/SSMB/SeleniumReference/src/main/resources/drivers/geckodriver.exe");
         System.setProperty("webdriver.gecko.driver",System.getProperty("user.dir") + "/src/main/resources/drivers/geckodriver.exe");
         driver = new FirefoxDriver();
-
+        driver.manage().window().maximize();
 
        // System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "/src/main/resources/drivers/chromedriver.exe");
         //driver = new ChromeDriver();
@@ -44,6 +41,8 @@ public class InputBoxTest {
         //driver.findElement(By.id("username-text")).sendKeys("Shiftedtech");
 
         WebElement element = driver.findElement(By.id("username-text"));
+
+        highlight(element);
 
         element.clear();
         element.sendKeys("Shiftedtech");
@@ -107,27 +106,54 @@ public class InputBoxTest {
 
     @Test
     public void rangeInputBox() throws InterruptedException {
-        Thread.sleep(10000);
-
-        int percent = 98;
-
         WebElement element = driver.findElement(By.id("range"));
-        Actions actionBuilder = new Actions(driver);
 
-        int height = element.getSize().getHeight();
-        int width = element.getSize().getWidth();
+        System.out.println("Value:" + element.getAttribute("value"));
 
-        Action action = actionBuilder.clickAndHold(element)
-                                     .moveByOffset(-(width/2),0)
-                                     .moveByOffset((width/100)*percent,0)
-                                     .release()
-                                     .build();
+        highlight(element);
+        rangeScroll(element,90);
 
-        action.perform();
-
+        System.out.println("Value: " + element.getAttribute("value"));
 
     }
 
+    public void rangeScroll(WebElement element, int percent){
+        int height = element.getSize().getHeight();
+        int width = element.getSize().getWidth();
+
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);",element);
+        delayFor(1000);
+
+        Actions actionBuilder = new Actions(driver);
+        Action action = actionBuilder.clickAndHold(element)
+                .moveByOffset(-(width/2),0)
+                .moveByOffset((width/100)*percent,0)
+                .release()
+                .build();
+
+        action.perform();
+    }
+
+    public void highlight(WebElement element) {
+        for (int i = 0; i < 2; i++) {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].setAttribute('style', arguments[1]);", element, "border: 2px solid red;");
+            delayFor(400);
+            js.executeScript(
+                    "arguments[0].setAttribute('style', arguments[1]);", element, "");
+            delayFor(1000);
+        }
+    }
+
+    public void delayFor(int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     @After
     public void tearDown(){
 
