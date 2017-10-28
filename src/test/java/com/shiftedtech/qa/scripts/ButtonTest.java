@@ -70,6 +70,62 @@ public class ButtonTest {
 
     }
 
+    @Test
+    public void test3(){
+        WebElement element = driver.findElement(By.id("html-button-01"));
+        //element.click();
+        jsClickEx(element);
+    }
+
+    @Test
+    public void test4(){
+        WebElement element = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::button"));
+        element.click();
+        delayFor(1000);
+        WebElement popUpMenu = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::ul//a[text()='Another action']"));
+        popUpMenu.click();
+    }
+
+    @Test
+    public void test5(){
+        clickButtonGroupPopup(By.xpath("//button[@id='split-button-01']"),"Action");
+    }
+    @Test
+    public void test6(){
+        clickButtonGroupPopup(By.xpath("//button[@id='split-button-02']"),"Something else here");
+    }
+    @Test
+    public void test7(){
+        clickButtonGroupPopupEx(By.xpath("//button[@id='split-button-02']"),"Something else Here");
+    }
+
+    public void clickButtonGroupPopup(By by, String itrmToClick){
+        WebElement element = driver.findElement(by);
+        WebElement dropDown = element.findElement(By.xpath("./following-sibling::button"));
+        dropDown.click();
+        delayFor(1000);
+        //WebElement popUpMenu = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::ul//a[text()='Another action']"));
+       // WebElement popUpMenu = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::ul//a[text()='" + "Another action" + "']"));
+       // WebElement popUpMenu = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::ul//a[text()='" + itrmToClick + "']"));
+        WebElement popUpMenu = element.findElement(By.xpath("./following-sibling::ul//a[text()='" + itrmToClick + "']"));
+        popUpMenu.click();
+    }
+
+    public void clickButtonGroupPopupEx(By by, String itrmToClick){
+        WebElement element = driver.findElement(by);
+        WebElement dropDown = element.findElement(By.xpath("./following-sibling::button"));
+        dropDown.click();
+        delayFor(1000);
+        List<WebElement> popUpMenus = element.findElements(By.xpath("./following-sibling::ul//a"));
+        for(WebElement item : popUpMenus){
+            String text = item.getText();
+            if(text.equalsIgnoreCase(itrmToClick)){
+                item.click();
+                break;
+            }
+        }
+    }
+
 
     public void delayFor(int time){
         try {
@@ -89,6 +145,10 @@ public class ButtonTest {
             delayFor(1000);
         }
     }
+    public void jsClickEx(WebElement element){
+        ((JavascriptExecutor) driver).executeScript("var el=arguments[0]; setTimeout(function() { el.click(); }, 100);",  element);
+    }
+
     @After
     public void tearDown(){
 
