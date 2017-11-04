@@ -79,6 +79,7 @@ public class ButtonTest {
 
     @Test
     public void test4(){
+        //WebElement element = driver.findElement(By.xpath("//button[@id='split-button-01']/../button[contains(@class,'dropdown-toggle')]"));
         WebElement element = driver.findElement(By.xpath("//button[@id='split-button-01']/following-sibling::button"));
         element.click();
         delayFor(1000);
