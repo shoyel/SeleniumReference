@@ -155,6 +155,60 @@ public class ComboBoxTest {
 
     }
 
+
+    @Test
+    public void test7(){
+
+        WebElement btn = driver.findElement(By.id("dropdown-menu-basic"));
+        if(btn != null){
+            btn.click();
+            //WebElement parent = btn.findElement(By.xpath("./.."));
+            WebElement parent = btn.findElement(By.xpath("./parent::*"));
+            List<WebElement> list = parent.findElements(By.xpath("./ul/li/a"));
+            for(WebElement item : list){
+                String text = item.getText();
+                System.out.println("Item found:" + text);
+                if(text.contains("Action")){
+                    item.click();
+                    System.out.println("Item Clicked:" + text);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            System.out.println("Could not found the button");
+        }
+
+    }
+
+    @Test
+    public void test8(){
+
+        WebElement btn = driver.findElement(By.id("dropdown-menu-basic"));
+        if(btn != null){
+            btn.click();
+            WebElement sibling = btn.findElement(By.xpath("./following-sibling::*[1]"));
+            List<WebElement> list = sibling.findElements(By.xpath("./li/a"));
+            for(WebElement item : list){
+                String text = item.getText();
+                System.out.println("Item found:" + text);
+                if(text.contains("Action")){
+                    item.click();
+                    System.out.println("Item Clicked:" + text);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            System.out.println("Could not found the button");
+        }
+
+    }
+
+
+
     public void delayFor(int time){
         try {
             Thread.sleep(time);
