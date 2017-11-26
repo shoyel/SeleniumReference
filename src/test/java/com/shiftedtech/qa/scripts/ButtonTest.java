@@ -24,11 +24,13 @@ public class ButtonTest {
 
     @Before
     public void setUp(){
+
         //System.setProperty("webdriver.gecko.driver","C:/MyDevelopment/SSMB/SeleniumReference/src/main/resources/drivers/geckodriver.exe");
         System.setProperty("webdriver.gecko.driver",System.getProperty("user.dir") + "/src/main/resources/drivers/geckodriver.exe");
         driver = new FirefoxDriver();
 
-        driver.manage().window().maximize();
+
+        //driver.manage().window().maximize();
 
         // System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "/src/main/resources/drivers/chromedriver.exe");
         //driver = new ChromeDriver();
