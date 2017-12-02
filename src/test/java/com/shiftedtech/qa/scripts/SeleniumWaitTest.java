@@ -1,6 +1,7 @@
 package com.shiftedtech.qa.scripts;
 
 import com.google.common.base.Function;
+import com.shiftedtech.qa.ScriptBase;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.After;
 import org.junit.Before;
@@ -17,33 +18,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by iivaan on 12/1/17.
  */
-public class SeleniumWaitTest {
+public class SeleniumWaitTest extends ScriptBase{
 
-    private static final int DEFAULT_WAIT_TIME = 10000;
-
-    private WebDriver driver;
 
     @Before
+    @Override
     public void setUp(){
-        ChromeDriverManager.getInstance().setup();
-
-        driver = new ChromeDriver();
-
-
-        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
-       // driver.navigate().to("http://jquery.eisbehr.de/lazy/#examples");
-
+        super.setUp();
         // Start application
         driver.get("http://seleniumpractise.blogspot.in/2016/08/how-to-use-explicit-wait-in-selenium.html");
-
-
-
-
     }
 
     @Test
     public void test1(){
+        //driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
         // Click on timer button to start
@@ -51,14 +39,14 @@ public class SeleniumWaitTest {
 
         driver.findElement(By.xpath("//p[text()='WebDriver']")).click();
 
-
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
     @Test
     public void test2(){
         driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
 
-        WebElement element = waitForElement(By.xpath("//p[text()='WebDriver']"),10000);
+        WebElement element = waitForElement(By.xpath("//p[text()='WebDriver']"),60);
 
         element.click();
 
@@ -68,14 +56,15 @@ public class SeleniumWaitTest {
     public void test3(){
         driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
 
-        WebElement element = waitForElementDisplayed(By.xpath("//p[text()='WebDriver']"),10000);
+        WebElement element = waitForElementDisplayed(By.xpath("//p[text()='WebDriver']"),60);
 
         element.click();
-
     }
 
     @Test
     public void test4(){
+
+        //https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/support/ui/ExpectedConditions.html
 
         FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
                                         .withTimeout(10, TimeUnit.SECONDS)
@@ -97,104 +86,72 @@ public class SeleniumWaitTest {
 
     }
 
+    @Test
+    public void test5(){
 
-    @After
-    public void tearDown(){
+        driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
+
+        // Here we will wait until element is not visible, if element is visible then it will return web element
+        // or else it will throw exception
+        //WebElement element = fluentWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[text()='WebDriver']")));
+        WebElement element = fluentWait(30,TimeUnit.SECONDS).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[text()='WebDriver']")));
+
+        element.click();
+
+    }
+
+    @Test
+    public void test6(){
+
+        driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
+
+        Boolean found = false;
+        try {
+            found = fluentWait(10, TimeUnit.SECONDS).until(ExpectedConditions.textToBePresentInElementLocated(By.id("demo"), "WebDriverXX"));
+        }
+        catch (TimeoutException ex){
+            ex.printStackTrace();
+        }
+
+        if(found) {
+            WebElement element = driver.findElement(By.id("demo"));
+            element.click();
+        }
+        else{
+            System.out.println("Element with the text not found");
+        }
+
+    }
+
+    @Test
+    public void test7(){
+
+        driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
+
+        WebElement element = textToBePresentInElementLocated(By.id("demo"),"WebDriver",10,TimeUnit.SECONDS);
+        element.click();
+
+    }
+
+    @Test
+    public void test8(){
+
+        driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
+
+        WebElement element = textToBePresentInElementLocated(By.id("demo"),"WebDriverXXX",10,TimeUnit.SECONDS);
+        element.click();
+
+    }
+
+    @Test
+    public void test9(){
+
+        driver.findElement(By.xpath("//button[text()='Click me to start timer']")).click();
+        delayFor(10000);
+        WebElement element = driver.findElement(By.xpath("//p[text()='WebDriver']"));
+        element.click();
 
     }
 
 
-    public WebElement waitForElement(final By locator, int timeToWaitInSec) {
-        driver.manage().timeouts().implicitlyWait(100,TimeUnit.MILLISECONDS);
-        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-                .withTimeout(timeToWaitInSec, TimeUnit.SECONDS)
-                .pollingEvery(100, TimeUnit.MILLISECONDS)
-                .ignoring(NoSuchElementException.class);
-
-        WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                return driver.findElement(locator);
-            }
-        });
-
-        driver.manage().timeouts().implicitlyWait(DEFAULT_WAIT_TIME,TimeUnit.MILLISECONDS);
-        return foo;
-    }
-
-    public WebElement waitForElementDisplayed(final By locator, int timeToWaitInSec) {
-
-        driver.manage().timeouts().implicitlyWait(100,TimeUnit.MILLISECONDS);
-
-        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-                .withTimeout(timeToWaitInSec, TimeUnit.SECONDS)
-                .pollingEvery(100, TimeUnit.MILLISECONDS)
-                .ignoring(NoSuchElementException.class);
-
-        WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                WebElement element = driver.findElement(locator);
-                if (element != null && element.isDisplayed()) {
-                    return element;
-                }
-                return null;
-            }
-        });
-
-        driver.manage().timeouts().implicitlyWait(DEFAULT_WAIT_TIME,TimeUnit.MILLISECONDS);
-        return foo;
-    }
-
-    public FluentWait<WebDriver> fluentWait() {
-        return fluentWait(DEFAULT_WAIT_TIME,TimeUnit.MILLISECONDS);
-    }
-
-    public FluentWait<WebDriver> fluentWait(int duration, TimeUnit timeUnit) {
-        return new FluentWait<WebDriver>(driver)       //<3>
-                .withTimeout(duration, timeUnit)
-                .pollingEvery(50, TimeUnit.MILLISECONDS)
-                .ignoreAll(new ArrayList<Class<? extends Throwable>>() {
-                    {
-                        add(StaleElementReferenceException.class);
-                        add(NoSuchElementException.class);
-                    }
-                }).withMessage("Selenium TimeoutException");
-    }
-
-    public void waitForVisibilityOfElement(WebElement element){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.visibilityOf(element));
-    }
-    public void waitForVisibilityOfElement(By locator){
-        WebElement element = driver.findElement(locator);
-        waitForVisibilityOfElement(element);
-    }
-
-    public void waitForPageTitle(String title){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.titleIs(title));
-    }
-
-    public void waitForPageTitleContains(String title){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.titleContains(title));
-    }
-
-    public void waitForInvisibilityOfElement(By locator){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
-
-    public void waitForElementAttributeContains(WebElement element,String attributeName, String attributeValue){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.attributeContains(element,attributeName,attributeValue));
-    }
-    public void waitForElementAttributeContains(By locator,String attributeName, String attributeValue){
-        WebElement element = driver.findElement(locator);
-        waitForElementAttributeContains(element,attributeName,attributeValue);
-    }
-
-    public void waitForElementTextToBe(By locator, String text){
-        FluentWait<WebDriver> wait = fluentWait();
-        wait.until(ExpectedConditions.textToBe(locator,text));
-    }
 }
