@@ -164,4 +164,21 @@ public class ScriptBase {
     }
 
 
+    public void scrollToElement(WebElement element){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+        delayFor(3000);
+    }
+
+    protected void highlight(WebElement element) {
+        for (int i = 0; i < 2; i++) {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].setAttribute('style', arguments[1]);", element, "border: 2px solid red;");
+            delayFor(200);
+            js.executeScript(
+                    "arguments[0].setAttribute('style', arguments[1]);",
+                    element, "");
+            delayFor(2000);
+        }
+    }
+
 }

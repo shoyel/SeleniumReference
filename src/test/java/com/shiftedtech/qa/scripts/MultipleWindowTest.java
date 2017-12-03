@@ -123,6 +123,21 @@ public class MultipleWindowTest extends ScriptBase {
 
     }
 
+    @Test
+    public void test7(){
+
+        String winHandle = driver.getWindowHandle();
+        System.out.println("Current window handle: " + winHandle);
+
+        WebElement element = driver.findElement(By.xpath(".//*[@id='window-01']/button"));
+        element.click();
+
+        System.out.println("closeAllOpenWindowExceptCurrent");
+        closeAllOpenWindowExceptCurrent();
+
+        winHandle = driver.getWindowHandle();
+        System.out.println("Current window handle: " + winHandle);
+    }
 
 
     public String getLastWIndowHandle(){
@@ -179,5 +194,18 @@ public class MultipleWindowTest extends ScriptBase {
             throw new RuntimeException("Window with the index '" + winIndex + "' not found.");
         }
     }
+
+    public void closeAllOpenWindowExceptCurrent(){
+        String currentWindowHnd = driver.getWindowHandle();
+        Set<String> windowList = driver.getWindowHandles();
+        for(String window : windowList){
+            if(!currentWindowHnd.contentEquals(window)){
+                driver.switchTo().window(window);
+                driver.close();
+            }
+        }
+        driver.switchTo().window(currentWindowHnd);
+    }
+
 
 }
