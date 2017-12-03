@@ -22,6 +22,30 @@ public class IframeHandleTest extends ScriptBase {
     }
 
     @Test
+    public void switchFrameByNameNotWorking(){
+        scrollToElement(driver.findElement(By.xpath("//h2[text()='Iframe 01']")));
+        //driver.switchTo().frame("iframe-01");
+
+        List<WebElement> iframeList = driver.findElements(By.tagName("iframe"));
+        System.out.println("iFrame count: " + iframeList.size());
+
+        //driver.switchTo().frame(iframeList.get(0));
+
+        driver.switchTo().frame(0);
+        WebElement element = driver.findElement(By.xpath(".//*[@id='topnavbar']/div/div[1]/button"));
+        highlight(element);
+        element.click();
+        delayFor(5000);
+
+
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(1);
+        element = driver.findElement(By.xpath(".//*[@id='topnavbar']/div/div[1]/button"));
+        highlight(element);
+        delayFor(5000);
+    }
+
+    @Test
     public void switchFrameByName(){
         scrollToElement(driver.findElement(By.xpath("//h2[text()='Iframe 01']")));
         driver.switchTo().frame("iframe-01");

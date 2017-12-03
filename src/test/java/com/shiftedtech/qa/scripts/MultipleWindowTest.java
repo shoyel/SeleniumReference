@@ -36,7 +36,9 @@ public class MultipleWindowTest extends ScriptBase {
         Set<String> winListNew =  driver.getWindowHandles();
         System.out.println("Window count after new window: " + winListNew.size());
 
-        String newWInHandle = winListNew.toArray()[winListNew.size() -1].toString();
+        Object[] arrayWin = winListNew.toArray();
+        String newWInHandle = arrayWin[arrayWin.length -1].toString();
+        //String newWInHandle = winListNew.toArray()[winListNew.size() -1].toString();
         System.out.println("New window handle: " + newWInHandle);
         driver.switchTo().window(newWInHandle);
 
@@ -44,8 +46,7 @@ public class MultipleWindowTest extends ScriptBase {
 
         driver.close();
 
-        driver.switchTo().window(winHandle);
-
+        //driver.switchTo().window(winHandle);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class MultipleWindowTest extends ScriptBase {
 
         closeLastWindow();
 
-        switchToLastWindow();
+        //switchToLastWindow();
 
     }
 
@@ -78,7 +79,24 @@ public class MultipleWindowTest extends ScriptBase {
 
         driver.close();
 
-        switchToLastWindow();
+        //switchToLastWindow();
+
+    }
+
+    @Test
+    public void test3_URL(){
+
+        WebElement element = driver.findElement(By.xpath(".//*[@id='window-01']/button"));
+        element.click();
+
+
+        switchToWindowByURL("http://shifttest.shiftedtech.com/components/form");
+
+        System.out.println("Win Title: " + driver.getTitle());
+
+        driver.close();
+
+        //switchToLastWindow();
 
     }
 
@@ -138,74 +156,4 @@ public class MultipleWindowTest extends ScriptBase {
         winHandle = driver.getWindowHandle();
         System.out.println("Current window handle: " + winHandle);
     }
-
-
-    public String getLastWIndowHandle(){
-        Set<String> winHdls = driver.getWindowHandles();
-        return winHdls.toArray()[winHdls.size() - 1].toString();
-    }
-
-    public void switchToLastWindow(){
-        String win = getLastWIndowHandle();
-        driver.switchTo().window(win);
-    }
-
-    public void closeLastWindow(){
-        switchToLastWindow();
-        driver.close();
-    }
-
-    public void closeWindow(String title){
-        switchToWindow(title);
-        driver.close();
-        switchToLastWindow();
-    }
-
-    public void closeWindow(int winIndex){
-        switchToWindow(winIndex);
-        driver.close();
-        switchToLastWindow();
-    }
-
-
-    public void switchToWindow(String winTitle){
-        Set<String> winHdls = driver.getWindowHandles();
-        Iterator<String> iterator = winHdls.iterator();
-        while (iterator.hasNext()){
-              String win = iterator.next();
-              driver.switchTo().window(win);
-              String currentTitle = driver.getTitle();
-              if(currentTitle.contains(winTitle)){
-                  return;
-              }
-        }
-        throw new RuntimeException("Window with the title contain '" + winTitle + "' not found.");
-    }
-
-    public void switchToWindow(int winIndex){
-        Set<String> winHdls = driver.getWindowHandles();
-
-        if(winIndex < winHdls.size()) {
-            String win = winHdls.toArray()[winIndex].toString();
-            driver.switchTo().window(win);
-        }
-        else
-        {
-            throw new RuntimeException("Window with the index '" + winIndex + "' not found.");
-        }
-    }
-
-    public void closeAllOpenWindowExceptCurrent(){
-        String currentWindowHnd = driver.getWindowHandle();
-        Set<String> windowList = driver.getWindowHandles();
-        for(String window : windowList){
-            if(!currentWindowHnd.contentEquals(window)){
-                driver.switchTo().window(window);
-                driver.close();
-            }
-        }
-        driver.switchTo().window(currentWindowHnd);
-    }
-
-
 }
