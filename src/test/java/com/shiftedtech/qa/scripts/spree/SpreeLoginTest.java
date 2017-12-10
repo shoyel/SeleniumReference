@@ -29,7 +29,10 @@ public class SpreeLoginTest extends SpreeScriptBase{
     @Test
     public void test2(){
         spree.bringLoginScreen();
+        //spree.getUtils().delayFor(1000);
         spree.login("kartick017@yahoo.com", "bangladesh");
+        delayFor(1000);
+        //spree.getUtils().switchToLastWindow();
         spree.verifyLoginSuccess();
     }
     @Test

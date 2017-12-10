@@ -1,12 +1,10 @@
 package com.shiftedtech.qa.spree;
 
+import com.shiftedtech.qa.spree.framework.SpreeFramework;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
@@ -39,6 +37,10 @@ public class SpreeScriptBase {
         driver.quit();
     }
 
+    public void delayFor(int timeInMili){
+        //spree.getUtils().delayFor(timeInMili);
+        spree.delayFor(timeInMili);
+    }
 
 
 }
