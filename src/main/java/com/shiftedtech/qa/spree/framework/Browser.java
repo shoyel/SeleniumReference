@@ -1,8 +1,11 @@
-package com.shiftedtech.qa.spree.utils;
+package com.shiftedtech.qa.spree.framework;
 
 import com.google.common.base.Function;
+import com.shiftedtech.qa.spree.utils.SeleniumUtils;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import org.junit.Assert;
 import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -13,20 +16,55 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by ShiftTeacher on 12/10/2017.
+ * Created by ShiftTeacher on 12/16/2017.
  */
-public class SeleniumUtils {
+public class Browser extends BrowserBase {
     public static final int DEFAULT_WAIT_TIME = 10;
 
-    protected WebDriver driver;
+    public Browser(){
+        super();
+    }
 
+    public void login(String email, String password) {
+        typeText(By.id("spree_user_email"), email);
+        typeText(By.id("spree_user_password"), password);
+        click(By.xpath("//input[@name='commit']"));
+    }
 
-    public SeleniumUtils(WebDriver driver){
-        this.driver = driver;
-       /// this.driver = new FirefoxDriver();
+    public void bringLoginScreen() {
+        WebElement loginLink = driver.findElement(By.linkText("Login"));
+        loginLink.click();
+    }
+
+    public void verifyLoginSuccess(){
+        WebElement loginSuccessLabel = driver.findElement(By.xpath("//div[@id='content']/div[contains(@class,'alert-success')]"));
+        String successText = loginSuccessLabel.getText();
+        Assert.assertEquals("Logged in successfully",successText);
+    }
+
+    public void verifyLoginNotSuccess(){
+        WebElement loginSuccessLabel = driver.findElement(By.xpath("//div[@id='content']/div[contains(@class,'alert-error')]"));
+        String successText = loginSuccessLabel.getText();
+        Assert.assertEquals("Invalid email or password.",successText);
     }
 
 
+    public void navigate(String url){
+        this.driver.navigate().to(url);
+    }
+    public void typeText(By by, String text){
+
+        WebElement element = waitForElementDisplayed(by, SeleniumUtils.DEFAULT_WAIT_TIME);
+        highlight(element);
+        element.clear();
+        element.sendKeys(text);
+    }
+
+    public void click(By by){
+        WebElement element = waitForElementDisplayed(by,SeleniumUtils.DEFAULT_WAIT_TIME);
+        highlight(element);
+        element.click();
+    }
 
     public void delayFor(int timeInMili){
         try {
