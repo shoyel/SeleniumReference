@@ -14,8 +14,10 @@ public class WebElementUtils extends SeleniumUtils {
     }
 
     public void typeText(By by, String text){
-
         WebElement element = waitForElementDisplayed(by,SeleniumUtils.DEFAULT_WAIT_TIME);
+        typeText(element,text);
+    }
+    public void typeText(WebElement element, String text){
         highlight(element);
         element.clear();
         element.sendKeys(text);
@@ -23,6 +25,9 @@ public class WebElementUtils extends SeleniumUtils {
 
     public void click(By by){
         WebElement element = waitForElementDisplayed(by,SeleniumUtils.DEFAULT_WAIT_TIME);
+        click(element);
+    }
+    public void click(WebElement element){
         highlight(element);
         element.click();
     }
