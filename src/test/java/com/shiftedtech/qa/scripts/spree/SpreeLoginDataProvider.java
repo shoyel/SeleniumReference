@@ -1,5 +1,6 @@
 package com.shiftedtech.qa.scripts.spree;
 
+import com.shiftedtech.qa.spree.utils.ExcelReader;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import jxl.Cell;
 import jxl.CellType;
@@ -66,4 +67,15 @@ public class SpreeLoginDataProvider {
         return data;
     }
 
+    @DataProvider
+    public static Object[][] loginDataProviderAsExcelWithPOI(){
+        Object[][] data = null;
+        String dataFile = System.getProperty("user.dir") + "/src/test/resources/SpreeLoginData.xls";
+
+        ExcelReader reader = new ExcelReader(dataFile);
+        data = reader.getExcelSheetData("Sheet1",true);
+
+
+        return data;
+    }
 }

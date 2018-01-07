@@ -23,7 +23,7 @@ public class SpreeLoginDataDrivenTest extends SpreePageObjectModelScriptBase {
 
     @Test
     //@UseDataProvider("loginDataProviderAsExcel")
-    @UseDataProvider(location = {SpreeLoginDataProvider.class},value = "loginDataProviderAsExcel")
+    @UseDataProvider(location = {SpreeLoginDataProvider.class},value = "loginDataProviderAsExcelWithPOI")
     public void verifySuccessfullLogin(String email, String password){
         homePage.verifyPageTitle("Spree Demo Site");
         homePage.navigateToLoginPage();

@@ -1,12 +1,20 @@
 package com.shiftedtech.qa.spree.framework.pages;
 
-import org.junit.Assert;
+//import org.junit.Assert;
+//import org.testng.Assert;
+
+import org.hamcrest.core.StringStartsWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matcher.*;
+import static org.hamcrest.CoreMatchers.*;
+
 
 /**
  * Created by ShiftTeacher on 12/17/2017.
@@ -42,6 +50,10 @@ public class LoginPage extends  PageBase{
     public void verifyLoginNotSuccess(){
        //String successText = alertMsg.getText();
         String successText = getAlertMsg().getText();
-        Assert.assertEquals("Invalid email or password.",successText);
+       // Assert.assertEquals("Invalid email or password.",successText);
+        assertThat(successText, startsWith("Invalid"));
+        assertThat(successText, endsWith("password."));
+        assertThat(successText,containsString("email"));
+        assertThat(successText,equalTo("Invalid email or password."));
     }
 }

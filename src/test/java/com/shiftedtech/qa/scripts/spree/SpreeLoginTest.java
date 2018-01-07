@@ -1,22 +1,12 @@
 package com.shiftedtech.qa.scripts.spree;
 
-import com.shiftedtech.qa.spree.SpreeScriptBase;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import com.shiftedtech.qa.spree.SpreeScriptBaseJUnit;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by ShiftTeacher on 12/9/2017.
  */
-public class SpreeLoginTest extends SpreeScriptBase{
+public class SpreeLoginTest extends SpreeScriptBaseJUnit {
 
     @Test
     public void test1(){
