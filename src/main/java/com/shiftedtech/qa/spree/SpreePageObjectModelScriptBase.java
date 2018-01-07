@@ -41,7 +41,6 @@ public class SpreePageObjectModelScriptBase {
     public void tearDown(){
         homePage = null;
         loginPage = null;
-
         driver.close();
         driver.quit();
     }
